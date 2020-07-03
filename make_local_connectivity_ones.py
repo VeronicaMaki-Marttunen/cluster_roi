@@ -51,7 +51,7 @@
 # NiBabel (http://nipy.sourceforge.net/nibabel) to be installed in a directory
 # that is accessible through PythonPath 
 import nibabel as nb
-from numpy import array
+from numpy import *
 from scipy import *
 from scipy.sparse import *
 
@@ -66,7 +66,7 @@ def indx_1dto3d(idx,sz):
 # simple function to translate 3D matrix coordinates to 1D vector coordinates,
 # for a 3D matrix of size sz
 def indx_3dto1d(idx,sz):
-    if( rank(idx) == 1):
+    if( ndim(idx) == 1):
         idx1=idx[0]*prod(sz[1:3])+idx[1]*sz[2]+idx[2]
     else:
         idx1=idx[:,0]*prod(sz[1:3])+idx[:,1]*sz[2]+idx[:,2]
@@ -111,7 +111,7 @@ def make_local_connectivity_ones( maskfile, outfile ):
     # elements of the mask
     iv=nonzero(mskdat)[0]
     m=len(iv)
-    print m, ' # of non-zero voxels in the mask'
+    print (m, ' # of non-zero voxels in the mask')
     # construct a sparse matrix from the mask
     msk=csc_matrix((range(1,m+1),(iv,zeros(m))),shape=(prod(msz),1))
 
@@ -121,7 +121,8 @@ def make_local_connectivity_ones( maskfile, outfile ):
 
     # loop over all of the voxels in the mask 	
     for i in range(0,m):
-    	if i % 1000 == 0: print 'voxel #', i
+        if i % 1000 == 0:
+            print('voxel #', i)
 
         # calculate the voxels that are in the 3D neighborhood
         # of the center voxel
@@ -140,7 +141,7 @@ def make_local_connectivity_ones( maskfile, outfile ):
 
         # the connections between neighbors are all = 1
         R=ones((len(ndx1d),len(ndx1d)))
-        if rank(R) == 0:
+        if ndim(R) == 0:
             R=reshape(R,(1,1))
 
         # extract just the weights connected to the seed
@@ -149,10 +150,11 @@ def make_local_connectivity_ones( maskfile, outfile ):
         # determine the non-zero correlations (matrix weights)
         # and add their indices and values to the list 
         nzndx=nonzero(R)[0]
+        # print(R[nzndx])
         if(len(nzndx)>0):
             sparse_i=append(sparse_i,ondx1d[nzndx]-1,0)
             sparse_j=append(sparse_j,(ondx1d[nndx]-1)*ones(len(nzndx)))
-            sparse_w=append(sparse_w,R[nzndx],1)
+            sparse_w=append(sparse_w,R[nzndx],0) #,1)
 
     # concatenate the i, j and w_ij into a single vector		
     outlist=sparse_i

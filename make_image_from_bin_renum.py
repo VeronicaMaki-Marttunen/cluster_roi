@@ -74,10 +74,10 @@ def make_image_from_bin_renum( image, binfile, mask ):
 
     # read in the binary data    
     if( binfile.endswith(".npy") ):
-        print "Reading",binfile,"as a npy filetype"
+        print ("Reading",binfile,"as a npy filetype")
         a=load(binfile)
     else:
-        print "Reading",binfile,"as a binary file of doubles"
+        print ("Reading",binfile,"as a binary file of doubles")
         a=fromfile(binfile)
 
     unique_a=list(set(a.flatten()))
@@ -92,7 +92,9 @@ def make_image_from_bin_renum( image, binfile, mask ):
 
     # map the binary data to mask
     imdat[imdat>0]=1
-    imdat[imdat>0]=short(b[0:sum(imdat)].flatten())
+    #print(b)
+    #print(sum(imdat))
+    imdat[imdat>0]=short(b[0:int(sum(imdat))].flatten())
 
     # write out the image as nifti
     nim_out = nb.Nifti1Image(imdat, nim.get_affine(), nim.get_header())

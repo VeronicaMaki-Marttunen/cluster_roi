@@ -59,7 +59,7 @@
 # sys.path.append("/home/user/python_toolboxes")
 
 # import the different functions we will use from pyClusterROI
-
+from numpy import *
 # only need one of these, based on which connectivity metric you prefer
 from make_local_connectivity_ones import *
 from make_local_connectivity_scorr import *
@@ -95,7 +95,7 @@ infiles = [  'subject1.nii.gz', 'subject2.nii.gz', 'subject3.nii.gz' ]
 
 # the easiest is random clustering which doesn't require any functional
 # data, just the mask
-print 'ones connectivity'
+print ('ones connectivity')
 make_local_connectivity_ones( maskname, 'rm_ones_connectivity.npy')
 
 
@@ -106,7 +106,7 @@ for idx, in_file in enumerate(infiles):
     # construct an output filename for this file
     outname='rm_tcorr_conn_'+str(idx)+'.npy'
 
-    print 'tcorr connectivity',in_file
+    print ('tcorr connectivity',in_file)
     # call the funtion to make connectivity
     make_local_connectivity_tcorr( in_file, maskname, outname, 0.5 )
 
@@ -118,7 +118,7 @@ for idx, in_file in enumerate(infiles):
     # construct an output filename for this file
     outname='rm_scorr_conn_'+str(idx)+'.npy'
 
-    print 'scorr connectivity',in_file
+    print ('scorr connectivity',in_file)
     # call the funtion to make connectivity
     make_local_connectivity_scorr( in_file, maskname, outname, 0.5 )
 
@@ -140,7 +140,7 @@ for idx, in_file in enumerate(infiles):
     infile='rm_tcorr_conn_'+str(idx)+'.npy'
     outfile='rm_tcorr_indiv_cluster_'+str(idx)
 
-    print 'tcorr parcellate',in_file
+    print ('tcorr parcellate',in_file)
     binfile_parcellate(infile, outfile, NUM_CLUSTERS)
 
 # for scorr
@@ -150,7 +150,7 @@ for idx, in_file in enumerate(infiles):
     infile='rm_scorr_conn_'+str(idx)+'.npy'
     outfile='rm_scorr_indiv_cluster_'+str(idx)
 
-    print 'scorr parcellate',in_file
+    print ('scorr parcellate',in_file)
     binfile_parcellate(infile, outfile, NUM_CLUSTERS)
 
 ##### Step 3. Group level clustering
@@ -167,14 +167,14 @@ mask_voxels=(nb.load(maskname).get_data().flatten()>0).sum()
 # output filename is a prefix
 tcorr_conn_files=['rm_tcorr_conn_0.npy','rm_tcorr_conn_1.npy',\
     'rm_tcorr_conn_2.npy']
-print 'group-mean parcellate tcorr'
+print ('group-mean parcellate tcorr')
 group_mean_binfile_parcellate( tcorr_conn_files,\
     'rm_group_mean_tcorr_cluster', NUM_CLUSTERS,mask_voxels);
 
 # now group mean cluster scorr files
 scorr_conn_files=['rm_scorr_conn_0.npy','rm_scorr_conn_1.npy',\
     'rm_scorr_conn_2.npy']
-print 'group-mean parcellate scorr'
+print ('group-mean parcellate scorr')
 group_mean_binfile_parcellate( scorr_conn_files,\
     'rm_group_mean_scorr_cluster', NUM_CLUSTERS, mask_voxels);
 
@@ -186,7 +186,7 @@ for k in NUM_CLUSTERS:
         ind_clust_files.append('rm_tcorr_indiv_cluster_'+str(i)+\
             '_'+str(k)+'.npy')
 
-    print '2-level parcellate tcorr',k
+    print ('2-level parcellate tcorr',k)
     group_binfile_parcellate(ind_clust_files,\
         'rm_group_tcorr_cluster_'+str(k)+'.npy',k,mask_voxels)
 
@@ -197,7 +197,7 @@ for k in NUM_CLUSTERS:
         ind_clust_files.append('rm_scorr_indiv_cluster_'+str(i)+\
             '_'+str(k)+'.npy')
 
-    print '2-level parcellate scorr',k
+    print ('2-level parcellate scorr',k)
     group_binfile_parcellate(ind_clust_files,\
         'rm_group_scorr_cluster_'+str(k)+'.npy',k,mask_voxels)
 
@@ -238,7 +238,7 @@ for k in NUM_CLUSTERS:
 
 T1 = time()
 
-print '******************************'
-print 'time is ', T1-T0
+print ('******************************')
+print ('time is ', T1-T0)
 ##### FIN
 

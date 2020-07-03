@@ -107,7 +107,7 @@ def read_and_conform_atlas(atlas_file,atlas_label_file,\
 
     atlas_labels=defaultdict()
 
-    print "Reading in the atlas labels: %s"%(atlas_label_file)
+    #print"Reading in the atlas labels: %s"%(atlas_label_file)
     with open(atlas_label_file,"r") as f:
         for line in f:
             if '#' in line:
@@ -117,12 +117,12 @@ def read_and_conform_atlas(atlas_file,atlas_label_file,\
             atlas_labels[int(vals[0])]=vals[1]
 
     atlas_labels[0]="None"
-    print "Read in the atlas %s"%(atlas_file)
+    #print "Read in the atlas %s"%(atlas_file)
     # lets read in the Harvord Oxford Cortical map
     atlas_nii=nb.load(atlas_file)
     atlas_img=atlas_nii.get_data()
 
-    print "Downsample the atlas"
+    print("Downsample the atlas")
     # resample the atlas to conform to parcels
     atlas_conform=image_downsample_voting(atlas_img, atlas_nii.get_affine(),\
                                    template_img, \
@@ -216,6 +216,7 @@ def main():
                 atlas_hist=[(n,round(float(sum(atlas_vals==n))/float(len(atlas_vals)),2)) \
                     for n in np.unique(atlas_vals)]
                 atlas_hist=sorted(atlas_hist,key=lambda f: -f[1])
+                
                 for h in atlas_hist:
                     if h[1] > 0.1:
                         fid.write("[\"%s\": %2.2f]"%(atlases[atlas][0][h[0]],h[1]))
